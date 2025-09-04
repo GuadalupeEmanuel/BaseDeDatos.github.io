@@ -1,0 +1,93 @@
+/* General */
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6fb;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+header {
+  background: linear-gradient(90deg, #4a90e2, #0072ff);
+  color: white;
+  text-align: center;
+  padding: 2rem 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+header p {
+  margin: 0.5rem 0 0;
+  font-size: 1.1rem;
+}
+
+main {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.semana {
+  background: white;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.semana:hover {
+  transform: scale(1.02);
+}
+
+.semana h2 {
+  margin-bottom: 1rem;
+  color: #0072ff;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn.primary {
+  background: #0072ff;
+  color: white;
+}
+
+.btn.primary:hover {
+  background: #0056cc;
+  transform: translateY(-2px);
+}
+
+.btn.secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.btn.secondary:hover {
+  background: #cfcfcf;
+  transform: translateY(-2px);
+}
+
+footer {
+  text-align: center;
+  background: #333;
+  color: white;
+  padding: 1rem;
+  margin-top: 2rem;
+}
