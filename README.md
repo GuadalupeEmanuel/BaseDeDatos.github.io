@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso de Base de Datos</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f6f9; }
+header, footer { text-align:center; padding:1rem; background:#2c3e50; color:white; }
+main { padding:1rem; display:flex; flex-direction:column; gap:1rem; }
+.semana { padding:1rem; background:white; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.acciones { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.5rem; align-items:center; }
+.btn { padding:0.5rem 1rem; border-radius:5px; cursor:pointer; text-decoration:none; color:white; }
+.primary { background:#3498db; border:none; }
+.secondary { background:#95a5a6; border:none; }
+h2 { margin:0; font-size:1.2rem; color:#333; }
+#btnActualizar { margin-bottom:1rem; background:#27ae60; }
+.no-files { color:#e74c3c; font-weight:bold; }
+</style>
+</head>
+<body>
+<header>
+<h1>📚 Curso de Base de Datos</h1>
+<p>Descarga de materiales por semanas (1–16)</p>
+</header>
+
+<main>
+<button id="btnActualizar" class="btn primary">🔄 Actualizar archivos</button>
+<div id="contenido"></div>
+</main>
+
+<footer>
+<p>© 2025 Curso de Base de Datos - Guadalupe Emanuel</p>
+</footer>
+
+<script>
+const usuario = "GuadalupeEmanuel";
+const repo = "BaseDeDatos.github.io";
+const semanas = 16;
+const contenido = document.getElementById('contenido');
+const btnActualizar = document.getElementById('btnActualizar');
+
+for(let i=1;i<=semanas;i++){
+    const divSemana = document.createElement('div');
+    divSemana.className='semana';
+    divSemana.id=`semana-${i}`;
+
+    const h2 = document.createElement('h2');
+    h2.textContent=`Semana ${i}`;
+    divSemana.appendChild(h2);
+
+    const acciones = document.createElement('div');
+    acciones.className='acciones';
+    divSemana.appendChild(acciones);
+
+    const btnGit = document.createElement('a');
+    btnGit.className='btn secondary';
+    btnGit.textContent="📂 Ver carpeta en GitHub";
+    btnGit.href=`https://github.com/${usuario}/${repo}/tree/main/Semana${i}`;
+    btnGit.target="_blank";
+    acciones.appendChild(btnGit);
+
+    contenido.appendChild(divSemana);
+}
+
+async function actualizarSemana(i){
+    const acciones = document.querySelector(`#semana-${i} .acciones`);
+    const noFilesPrev = acciones.querySelector('.no-files');
+    if(noFilesPrev) noFilesPrev.remove();
+
+    try{
+        const res = await fetch(`https://api.github.com/repos/${usuario}/${repo}/contents/Semana${i}`);
+        if(!res.ok) throw new Error('Carpeta no encontrada');
+        const archivos = await res.json();
+        if(!Array.isArray(archivos)) throw new Error('No se pudo obtener archivos');
+
+        const existentes = Array.from(acciones.querySelectorAll('button')).map(b=>b.textContent.replace('⬇ ',''));
+
+        archivos.forEach(f=>{
+            if(f.type==='file' && !existentes.includes(f.name)){
+                const btn = document.createElement('button');
+                btn.className='btn primary';
+                btn.textContent=`⬇ ${f.name}`;
+
+                btn.onclick = () => {
+                    fetch(f.download_url)
+                        .then(r=>r.blob())
+                        .then(blob=>{
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = f.name;
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        })
+                        .catch(err=>alert('Error al descargar archivo'));
+                };
+                acciones.appendChild(btn);
+            }
+        });
+
+        const botones = Array.from(acciones.querySelectorAll('button'));
+        botones.forEach(b=>{
+            const nombre = b.textContent.replace('⬇ ','');
+            if(!archivos.find(f=>f.type==='file' && f.name===nombre)){
+                b.remove();
+            }
+        });
+
+        if(archivos.filter(f=>f.type==='file').length===0){
+            const noFiles = document.createElement('span');
+            noFiles.className='no-files';
+            noFiles.textContent='No hay archivos en esta semana.';
+            acciones.appendChild(noFiles);
+        }
+
+    }catch(err){
+        console.log(err);
+        const noFiles = document.createElement('span');
+        noFiles.className='no-files';
+        noFiles.textContent='No se pudo cargar esta semana.';
+        acciones.appendChild(noFiles);
+    }
+}
+
+function actualizarTodo(){
+    for(let i=1;i<=semanas;i++) actualizarSemana(i);
+}
+
+btnActualizar.onclick = actualizarTodo;
+actualizarTodo();
+</script>
+</body>
+</html>
