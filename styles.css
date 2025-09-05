@@ -1,0 +1,80 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+header {
+  text-align: center;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: white;
+  padding: 20px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+main {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.semana {
+  background: white;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.semana h2 {
+  margin-top: 0;
+  color: #007bff;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn.primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn.primary:hover {
+  background: #0056b3;
+}
+
+.btn.secondary {
+  background: #f1f1f1;
+  color: #333;
+}
+
+.btn.secondary:hover {
+  background: #ddd;
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #222;
+  color: white;
+  margin-top: 20px;
+}
