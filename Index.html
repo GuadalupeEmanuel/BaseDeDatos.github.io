@@ -34,7 +34,7 @@ h2 { margin:0; font-size:1.2rem; color:#333; }
 </footer>
 
 <script>
-// 🔧 Configuración del usuario y repositorio (respetando mayúsculas)
+// ✅ Configuración (respeta las mayúsculas de tu repo)
 const usuario = "GuadalupeEmanuel";
 const repo = "BaseDeDatos.github.io";
 const semanas = 16;
@@ -70,8 +70,19 @@ async function actualizarSemana(i){
     if(noFilesPrev) noFilesPrev.remove();
 
     try{
-        const res = await fetch(`https://api.github.com/repos/${usuario}/${repo}/contents/Semana${i}`);
-        if(!res.ok) throw new Error('Carpeta no encontrada');
+        const url = `https://api.github.com/repos/${usuario}/${repo}/contents/Semana${i}`;
+        const res = await fetch(url);
+
+        if(res.status === 404){
+            const noFiles = document.createElement('span');
+            noFiles.className='no-files';
+            noFiles.textContent='⚠️ No existe la carpeta Semana'+i+' en el repositorio.';
+            acciones.appendChild(noFiles);
+            return;
+        }
+
+        if(!res.ok) throw new Error('Error al conectar con GitHub');
+
         const archivos = await res.json();
         if(!Array.isArray(archivos)) throw new Error('No se pudo obtener archivos');
 
@@ -100,18 +111,10 @@ async function actualizarSemana(i){
             }
         });
 
-        const botones = Array.from(acciones.querySelectorAll('button'));
-        botones.forEach(b=>{
-            const nombre = b.textContent.replace('⬇ ','');
-            if(!archivos.find(f=>f.type==='file' && f.name===nombre)){
-                b.remove();
-            }
-        });
-
         if(archivos.filter(f=>f.type==='file').length===0){
             const noFiles = document.createElement('span');
             noFiles.className='no-files';
-            noFiles.textContent='No hay archivos en esta semana.';
+            noFiles.textContent='📭 No hay archivos en esta semana.';
             acciones.appendChild(noFiles);
         }
 
@@ -119,7 +122,7 @@ async function actualizarSemana(i){
         console.log(err);
         const noFiles = document.createElement('span');
         noFiles.className='no-files';
-        noFiles.textContent='No se pudo cargar esta semana.';
+        noFiles.textContent='❌ Error al cargar esta semana.';
         acciones.appendChild(noFiles);
     }
 }
